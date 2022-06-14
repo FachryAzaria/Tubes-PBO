@@ -1,6 +1,7 @@
 
 package Form;
 
+import com.Customer;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.Statement;
@@ -30,7 +31,8 @@ public class FormSignUp extends javax.swing.JFrame {
                 Class.forName("com.mysql.jdbc.Driver");
                 con = DriverManager.getConnection("jdbc:mysql://localhost/dblogin","root","");
                 st = con.createStatement();
-                String simpan = "INSERT INTO tblogin VALUES ('"+tfUsername.getText()+"','"+String.valueOf(tfPassword.getPassword())+"','"+tfFirstName.getText()+"','"+tfLastName.getText()+"')";
+                Customer cust = new Customer(tfFirstName.getText(), tfLastName.getText(), tfUsername.getText(), String.valueOf(tfPassword.getText()));
+                String simpan = "INSERT INTO tblogin VALUES ('"+cust.getUsername()+"','"+cust.getPassword()+"','"+cust.getFirstname()+"','"+cust.getLastname()+"')";
                 st=con.createStatement();
                 int SA = st.executeUpdate(simpan);
                 JOptionPane.showMessageDialog(null, "Sign Up berhasil");
@@ -40,8 +42,12 @@ public class FormSignUp extends javax.swing.JFrame {
         } catch (Exception e){
             JOptionPane.showMessageDialog(this, "Akun Sudah Ada", "Pesan",JOptionPane.WARNING_MESSAGE);
             hapusTF();
+            
         }
+         
+         
     }
+    
 
     /**
      * This method is called from within the constructor to initialize the form.

@@ -1,18 +1,76 @@
-
 package Form;
 
+import event.EventItem;
 import com.Produk;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import javax.swing.ImageIcon;
 
 public class Beranda extends javax.swing.JFrame {
-Produk produk;
     
+    private fkeranjang cart;
+    private FormHome home;
+    int total = 0;
+    int noitem = 1;
+    
+    // constructor Beranda untuk menjalankan method yang dipanggil
     public Beranda() {
         initComponents();
+        init();
+        cart.setVisible(false);
     }
     
+    // method init berfungsi untuk membuat obejek keranjang dan mengatur layout
+    private void init(){
+        cart = new fkeranjang();
+        home = new FormHome();
+        mainPanel1.setLayout(new BorderLayout());
+        mainPanel1.add(home);
+        testdata();
+    }
     
-    
-
+    // untuk menjalankan data produk agar tampil pada beranda, dan menambahakan produk pada keranjang
+    private void testdata(){
+        home.setEvent(new EventItem(){
+            // konsep overriding dari interface EventItem
+            @Override
+            public void itemClick(Component com, Produk item){
+                
+                if (cart.namaitem.getText().equals("")) {
+                    total = 0;
+                    noitem = 1;   
+                }
+                
+                String spasi = "";
+                
+                if(noitem>9){
+                    spasi = " ".repeat(19);
+                }else{
+                    spasi = " ".repeat(21);
+                }
+                
+                // menamahakn produk pada keranjang
+                cart.namaitem.append(noitem+""+spasi + item.getNama_produk()+"\n");
+                cart.hargaitem.append(""+item.getHarga_produk()+"\n");
+                noitem += 1;
+                
+                //jumlahin harga
+                total += item.getHarga_produk();
+                cart.Total.setText("Rp "+total);
+                btnKeranjang.setIcon(new javax.swing.ImageIcon(getClass().getResource("/res/shopping-cart (1).png")));
+                
+            }
+        });
+        
+        // perulangan for untuk membuat objek produk
+        for(int i=0; i<=2;i++){
+            home.addItem(new Produk("Adidas 1", 150, "Ukuran 41-43", new ImageIcon(getClass().getResource("/res/ItemImage/img1.png"))));
+            home.addItem(new Produk("Adidas 2", 170, "Ukuran 41-43", new ImageIcon(getClass().getResource("/res/ItemImage/img2.png"))));
+            home.addItem(new Produk("Adidas 3", 165, "Ukuran 41-43", new ImageIcon(getClass().getResource("/res/ItemImage/img3.png"))));
+            
+        }
+    }
+       
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -23,19 +81,58 @@ Produk produk;
     private void initComponents() {
 
         base = new javax.swing.JPanel();
+        jPanel1 = new javax.swing.JPanel();
+        mainPanel1 = new Form.MainPanel();
+        jSeparator1 = new javax.swing.JSeparator();
+        btnKeranjang = new javax.swing.JLabel();
         panelNav = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(255, 255, 255));
         setResizable(false);
+        setSize(new java.awt.Dimension(900, 600));
 
         base.setBackground(new java.awt.Color(255, 255, 255));
+        base.setPreferredSize(new java.awt.Dimension(900, 600));
+
+        lbFirstName.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
+        lbFirstName.setForeground(new java.awt.Color(51, 51, 51));
+        lbFirstName.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lbFirstName.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+
+        javax.swing.GroupLayout mainPanel1Layout = new javax.swing.GroupLayout(mainPanel1);
+        mainPanel1.setLayout(mainPanel1Layout);
+        mainPanel1Layout.setHorizontalGroup(
+            mainPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 730, Short.MAX_VALUE)
+        );
+        mainPanel1Layout.setVerticalGroup(
+            mainPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(mainPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(mainPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+
+        btnKeranjang.setFont(new java.awt.Font("Montserrat Light", 0, 14)); // NOI18N
+        btnKeranjang.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        btnKeranjang.setIcon(new javax.swing.ImageIcon(getClass().getResource("/res/shopping-cart-empty-side-view (1).png"))); // NOI18N
+        btnKeranjang.setText(" Keranjang");
+        btnKeranjang.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                btnKeranjangMousePressed(evt);
+            }
+        });
 
         panelNav.setBackground(new java.awt.Color(102, 51, 255));
-
-        lbFirstName.setFont(new java.awt.Font("Montserrat", 1, 16)); // NOI18N
-        lbFirstName.setForeground(new java.awt.Color(255, 255, 255));
-        lbFirstName.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
 
         lbLogOut.setFont(new java.awt.Font("Montserrat", 0, 16)); // NOI18N
         lbLogOut.setForeground(new java.awt.Color(255, 255, 255));
@@ -57,9 +154,7 @@ Produk produk;
         panelNavLayout.setHorizontalGroup(
             panelNavLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelNavLayout.createSequentialGroup()
-                .addGap(16, 16, 16)
-                .addComponent(lbFirstName, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 540, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(lbLogOut)
                 .addGap(20, 20, 20))
         );
@@ -67,42 +162,59 @@ Produk produk;
             panelNavLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelNavLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(panelNavLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lbFirstName, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lbLogOut, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(lbLogOut, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 7, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout baseLayout = new javax.swing.GroupLayout(base);
         base.setLayout(baseLayout);
         baseLayout.setHorizontalGroup(
-            baseLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(panelNav, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            baseLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+            .addComponent(panelNav, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(baseLayout.createSequentialGroup()
+                .addGap(31, 31, 31)
+                .addGroup(baseLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(btnKeranjang, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lbFirstName, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(42, 42, 42)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
         baseLayout.setVerticalGroup(
             baseLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(baseLayout.createSequentialGroup()
                 .addComponent(panelNav, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 493, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(baseLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(baseLayout.createSequentialGroup()
+                        .addComponent(lbFirstName, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnKeranjang, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 464, Short.MAX_VALUE))
+                    .addGroup(baseLayout.createSequentialGroup()
+                        .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addContainerGap())))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(base, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(base, javax.swing.GroupLayout.DEFAULT_SIZE, 934, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(base, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+            .addComponent(base, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
-
+    
+    // label dengan method logout yang akan kembali pada FormLogin
     private void lbLogOutMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lbLogOutMouseClicked
         this.dispose();
         new FormLogin().setVisible(true);
@@ -115,6 +227,11 @@ Produk produk;
     private void lbLogOutMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lbLogOutMouseExited
         lbLogOut.setForeground(new java.awt.Color(255, 255, 255));
     }//GEN-LAST:event_lbLogOutMouseExited
+    
+    // btn dengan method untuk menampilkan objek keranjang
+    private void btnKeranjangMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnKeranjangMousePressed
+        cart.setVisible(true);
+    }//GEN-LAST:event_btnKeranjangMousePressed
     
     
     public static void main(String args[]) {
@@ -151,8 +268,12 @@ Produk produk;
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel base;
+    private javax.swing.JLabel btnKeranjang;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JSeparator jSeparator1;
     public static final javax.swing.JLabel lbFirstName = new javax.swing.JLabel();
     public static final javax.swing.JLabel lbLogOut = new javax.swing.JLabel();
+    private Form.MainPanel mainPanel1;
     private javax.swing.JPanel panelNav;
     // End of variables declaration//GEN-END:variables
 
